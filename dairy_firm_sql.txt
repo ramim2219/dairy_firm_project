@@ -1,0 +1,74 @@
+CREATE DATABASE dairy_firm_management_system;
+CREATE TABLE adminTable (
+    user_Id VARCHAR(15) PRIMARY KEY,
+    user_pass VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE staff_table(
+    S_No INT(10) PRIMARY KEY,
+    S_Name VARCHAR(50) NOT NULL,
+    Gender VARCHAR(50) NOT NULL,
+    Address VARCHAR(50) NOT NULL,
+    Work VARCHAR(20) NOT NULL,
+    Salary BIGINT(20) NOT NULL,
+    Phone_No BIGINT(20) NOT NULL,
+    R_Date DATE NOT NULL
+);
+ALTER TABLE staff_table ADD user_pass varchar(255);
+ALTER TABLE staff_table MODIFY S_No INT AUTO_INCREMENT;
+
+CREATE TABLE milkRateTable(
+    S_NO INT PRIMARY KEY AUTO_INCREMENT,
+    Name Varchar(255) NOT NULL,
+    Fat FLOAT NOT NULL,
+    Rate FLOAT NOT NULL,
+    Udate DATE NOT NULL
+);
+INSERT INTO `milkratetable`(`Name`, `Fat`, `Rate`, `Udate`) VALUES ('Buffalo','0.0','0.0','0000-00-00'),('Cow','0.0','0.0','0000-00-00') ;
+
+CREATE TABLE sellerTable(
+    S_No INT PRIMARY KEY AUTO_INCREAMENT,
+    S_Name VARCHAR(50) NOT NULL,
+    Address VARCHAR(50) NOT NULL,
+    R_Date DATE NOT NULL,
+    Phone_No BIGINT(20) NOT NULL,
+    pass varchar(255) NOT NULL
+);
+alter table sellertable add column user_id varchar(255) UNIQUE NOT NULL;
+alter table staff_table add column user_id varchar(255) UNIQUE NOT NULL;
+
+CREATE TABLE buymilkdetail (
+    S_NO int PRIMARY KEY AUTO_INCREMENT,
+    milkid_no int,
+    user_id int,
+    rate float NOT NULL,
+    quantity int NOT NULL,
+    due float NOT NULL ,
+    status int default 0,
+    order_date DATE NOT NULL,
+    FOREIGN KEY (milkid_no) REFERENCES milkRateTable(S_NO),
+    FOREIGN KEY (user_id) REFERENCES sellerTable(S_No)
+)
+ALTER TABLE buymilkdetail AUTO_INCREMENT=1000
+
+SELECT 
+b.S_NO as order_code,
+b.quantity as quantity,
+b.due as due,
+b.rate as rate, 
+b.status as payment_status,
+b.order_date as order_date,
+m.Name as cattle_name 
+FROM buymilkdetail as b inner join milkratetable as m
+on b.milkid_no=m.S_NO
+where b.user_id=3
+
+CREATE TABLE feedbackTable (
+    f_no Int PRIMARY KEY AUTO_INCREMENT,
+    order_code INT,
+    feedback LONGTEXT,
+    reply LONGTEXT,
+    FOREIGN KEY (order_code) REFERENCES buymilkdetail(S_NO)
+);
+
+INSERT INTO `admintable`(`User_Id`, `Password`) VALUES ('admin Ramim',MD5('62516251'))
